@@ -95,7 +95,7 @@ train_2 <- predict(pr, train_2)
 registerDoParallel(cores=4)
 
 cv <- trainControl('cv', 3, savePred=T) #3 fold cross validation
-set.seed(111)
+set.seed(111222)
 model <- train(classe ~ ., data = train_2, method = 'rf', trControl = cv)
 model
 plot(model)
