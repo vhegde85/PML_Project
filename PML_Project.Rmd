@@ -62,6 +62,15 @@ train <- train[,!(no_var$nzv)]
 
 Based on an analysis of coorrelations between predictors, we see that are pairs of predictors that havevery high correlation as shown below. 
 
+```{r corr1}
+corr <- abs(sapply(colnames(train[, 1:(ncol(train)-1)]), 
+       function(x) cor(as.numeric(train[, x]), 
+       as.numeric(train$classe), method = "spearman")))
+
+summary(corr)
+```
+A simple linear regression cannot be used due to the high correlations as shown above. 
+
 ```{r plot2}
 qplot(roll_belt, total_accel_belt, data=train, color=classe, main='Roll_belt Vs. Total_accel_belt per classe')
 ```
@@ -70,7 +79,7 @@ Since we will use an ML algorithm that can handle these correlations, we will no
 
 ##Machine Learning
 
-We will use Random forest algorithm to build the model. As shown below the model performs well on the training and cross-validation dataset
+We will use Random forest algorithm to build the model. As shown below the model performs well on the training and cross-validation dataset. First we will impute missing data.
 
 ```{r randf1}
 library(caret)
@@ -94,7 +103,7 @@ plot(model)
 
 ## Testing
 
-We now use the model built to test its performance on the test dataset
+We now use the model built to test its performance on the test dataset. The confusion matrix shows that all observations are correctly classified.
 
 ```{r test1}
 test <- test[,names(test) %in% names(train_2)]
