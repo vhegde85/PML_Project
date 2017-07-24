@@ -40,14 +40,23 @@ train[train == '#DIV/0!'] <- NA
 train[train == ''] <- NA
 dim(train)
 dim(test)
-train <- train[,-c(1:7)] #removing columns that shouldn't be used in prediction (user name, etc.)
-for(i in 1:(ncol(train)-1)){if(class(train[, i]) == 'factor'){train[, i] <- as.numeric(as.character(train[, i]))}} #adjusting datatypes to be numeric 
-no_var <- nearZeroVar(train, saveMetrics = T) #removing columns with minimal variance
+```
+
+Note above, that the dimensions (rows x columns) of the training and testdatsets have been logged. A validation datset will be carved out of the training dataset 
+
+``` {r naremoval}
+#removing columns that shouldn't be used in prediction (user name, etc.)
+train <- train[,-c(1:7)] 
+#adjusting datatypes to be numeric 
+for(i in 1:(ncol(train)-1))
+  {if(class(train[, i]) == 'factor'){train[, i] <- as.numeric(as.character(train[, i]))}} 
+
+#removing columns with minimal variance
+no_var <- nearZeroVar(train, saveMetrics = T) 
 removed.cols <- names(train)[no_var$nzv]
 train <- train[,!(no_var$nzv)]
 ```
 
-Note above, that the dimensions (rows x columns) of the training and testdatsets have been logged. A validation datset will be carved out of the training dataset 
 
 ### Data visualization
 
@@ -69,6 +78,8 @@ train_2 <- train
 pr <- preProcess(train_2[,-ncol(train_2)], method="medianImpute")
 train_2 <- predict(pr, train_2)
 ```
+
+###Random Forest Model
 
 ```{r rf2}
 #parallelizing computations to improve speed
